@@ -1,0 +1,14 @@
+{
+  "$schema": "https://dl.viam.dev/module.schema.json",
+  "module_id": "__NAMESPACE__:test-module",
+  "visibility": "__VISIBILITY__",
+  "url": "https://github.com/cheukt/test-modules",
+  "description": "Test module with configurable slow starts, crashes, first runs and broken packages.",
+  "models": [
+    {
+      "api": "rdk:service:generic",
+      "model": "__NAMESPACE__:test-module:noop"
+    }
+  ],
+  "entrypoint": "bin/test-module"__FIRST_RUN__
+}
