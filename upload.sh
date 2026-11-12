@@ -65,6 +65,8 @@ viam_() {
 }
 
 root="$(cd "$(dirname "$0")" && pwd)"
+# `module upload` reads README.md from the cwd as the registry documentation.
+cd "$root"
 build="$root/build"
 rm -rf "$build" && mkdir -p "$build"
 
