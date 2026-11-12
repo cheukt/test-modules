@@ -25,10 +25,34 @@ Set these in the module config's `env`.
 | --- | --- |
 | `START_DELAY_SEC=30` | sleep before serving (Starting) |
 | `CRASH_ON_START=1` | exit 1 before serving (Failed, crash loop) |
+| `CRASH_AFTER_SEC=60` | serve, then exit 1 after N seconds (Ready → Failed, crash loop with Ready gaps) |
+| `LOG_ERROR_INTERVAL_SEC=5` | log a module error every N seconds, including while starting |
 | `FIRST_RUN_DELAY_SEC=60` | `0.6.0`/`0.7.0`: first run sleeps first |
 | `FIRST_RUN_FAIL=1` | `0.6.0`/`0.7.0`: first run exits 1 |
 
 viam-server only re-runs a first run that failed. To repeat one that succeeded, switch to the other first-run version, or delete `~/.viam/packages/data/module/*test-module*<version>*.first_run_succeeded` on the machine.
+
+## Resource attributes
+
+| Attribute | Effect |
+| --- | --- |
+| `"fail_build": true` | the constructor returns an error; the module stays Ready |
+| `"crash_on_build": true` | the constructor exits the module process (one bad resource crash-loops its module) |
+| `"build_delay_sec": 30` | the constructor sleeps first |
+| `"close_delay_sec": 30` | `Close` sleeps, so removing or upgrading the module shows Closing |
+| `"error_log_interval_sec": 5` | log a resource error every N seconds while it runs |
+
+Attribute changes rebuild the resource, so `close_delay_sec` also delays each save.
+
+Durations can be fractions of a second. Some useful extremes:
+
+- `build_delay_sec` over 120 times out the resource build (`VIAM_RESOURCE_CONFIGURATION_TIMEOUT`, default 2m) while the module stays Ready.
+- `START_DELAY_SEC` over 300 times out module startup (`VIAM_MODULE_STARTUP_TIMEOUT`, default 5m) without a crash.
+- `error_log_interval_sec: 0.1` floods errors, to test the "99+" count.
+
+## DoCommand
+
+`{"crash": true}` exits the module right away, so you can trigger Failed without saving config.
 
 ## Upload
 
